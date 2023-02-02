@@ -1,0 +1,46 @@
+Create a backup script to archive files and compressed archive files on specific files and move those files to another directory with exit codes
+
+[Create directory for testing environment]
+mkdir /home/ianplasabas/scriptTest/
+cd !$
+mkdir backupFiles/ destBackupFiles/
+cd backupFiles/
+touch backup1 backup2 backup3 backgz1 backgz2 backgz3
+cd ..
+
+[Create backup script]
+vi /home/ianplasabas/scriptTest/scriptBackup.sh
+
+  [Code]
+  #!/bin/bash
+
+  for files in /home/ianplasabas/scriptTest/backupFiles/*
+  do
+          if [[ $files = *gz* ]]
+          then
+                  echo "Creating Compressed file: $files"
+                  tar -czvf $files.tar.gz $files
+
+                  if [ $? -eq 0 ]
+                  then
+                          echo "SUCCESS"
+                  else
+                          echo "FAILED"
+                  fi
+
+          else
+                  echo "Creating backup file: $files"
+                  tar -cvf $files.tar $files
+
+                  if [ $? -eq 0 ]
+                  then
+                          echo "SUCCESS"
+                  else
+                          echo "FAILED"
+                  fi
+
+
+          fi
+
+          mv /home/ianplasabas/scriptTest/backupFiles/*tar* /home/ianplasabas/scriptTest/destBackupFiles
+  done
