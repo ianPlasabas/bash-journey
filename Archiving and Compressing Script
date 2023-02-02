@@ -44,3 +44,15 @@ vi /home/ianplasabas/scriptTest/scriptBackup.sh
 
           mv /home/ianplasabas/scriptTest/backupFiles/*tar* /home/ianplasabas/scriptTest/destBackupFiles
   done
+
+command mode: :wq
+
+[Making script executable]
+chown u+x scriptTest.sh
+
+[Run script]
+./scriptTest.sh
+
+or if no shebang
+
+bash scriptTest.sh
