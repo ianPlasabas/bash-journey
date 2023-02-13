@@ -1,12 +1,26 @@
+#Extracting column 1 and column 2
+# tail -n +2 to remove headers provided by the df command
+# egrep -v will extract information that is not in the pattern
+# awk will extract column 1 and 5, the device name and usage in %
 df -k | tail -n +2 | egrep -v 'tmpfs|/dev/cd[0-9]|/proc' | awk '{print $1, $5}' > workfile
+
+#Colors
 red='\033[0;31m'
 nc='\033[0m'
 grn='\033[1;32m'
-while read -r x;
-do
-        fs_name=$(echo $x | awk '{print $1}')
-        fs_capacity=$(echo $x | awk '{print $2}' | sed s/\%//g )
 
+#while to read lines
+#for loop will create new lines after a space, hence might be difficult to work with the output 
+#e.g
+#(while loop) /dev/sda1 40% | (for loop) /dev/sda1 \n 40%
+
+while read -r line;
+do
+        #Extract name and usage to variables
+        fs_name=$(echo $line | awk '{print $1}')
+        fs_capacity=$(echo $line | awk '{print $2}' | sed s/\%//g )
+        
+        #40% is my highest usage in VM, for testing 
         if [ $fs_capacity -ge 40 ]
         then
                 echo "          FILESYSTEMS NOTICE"
