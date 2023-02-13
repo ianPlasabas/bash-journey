@@ -1,0 +1,22 @@
+df -k | tail -n +2 | egrep -v 'tmpfs|/dev/cd[0-9]|/proc' | awk '{print $1, $5}' > workfile
+red='\033[0;31m'
+nc='\033[0m'
+grn='\033[1;32m'
+while read -r x;
+do
+        fs_name=$(echo $x | awk '{print $1}')
+        fs_capacity=$(echo $x | awk '{print $2}' | sed s/\%//g )
+
+        if [ $fs_capacity -ge 40 ]
+        then
+                echo "          FILESYSTEMS NOTICE"
+                echo -e "${red}WARNING${nc} - $fs_name is $fs_capacity% full"
+        fi
+
+        if [ $fs_capacity -lt 40 ]
+        then
+                echo -e "${grn}OK${nc} - The $fs_name is $fs_capacity% full"
+        fi
+
+
+done < workfile
